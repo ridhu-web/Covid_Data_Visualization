@@ -1,0 +1,53 @@
+/* styles.css */
+svg .county-centroid:hover {
+    fill: #333;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+  .left-nav {
+    height: 100%;
+    width: 20%; /* Width of the navigation bar */
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111; /* Background color */
+    overflow-x: hidden;
+    box-sizing: border-box; 
+}
+
+.left-nav a {
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+}
+
+.left-nav a:hover {
+    color: #f1f1f1;
+}
+
+
+.right-content {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  box-sizing: border-box;
+}
+
+.left-nav h4 {
+  color: white;
+}
+
+.left-nav .vis-btns {
+  display: block;
+  margin-bottom: 10px; /* Add space between buttons */
+}
+
+.d3-component {
+  width: 100%;
+  /* Keep your existing styles, but ensure it doesn't have a fixed height */
+}

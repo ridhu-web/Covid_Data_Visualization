@@ -1,0 +1,24 @@
+#chart {
+    width: 600px;
+    height: 400px;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.tooltip {
+    position: absolute;
+    text-align: center;
+    width: 120px;
+    height: 50px;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: rgb(154, 190, 237);
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
