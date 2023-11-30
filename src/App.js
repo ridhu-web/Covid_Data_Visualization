@@ -10,7 +10,7 @@ import Charts2 from "./Charts2";
 
 function App() {
   //state deciding if we are looking at the blackhat or whitehat visualization
-  const [viewToggle, setViewToggle] = useState("blackhat");
+  const [viewToggle, setViewToggle] = useState("Stacked Choropleth Map");
 
   //state for the data, since it loads asynchronously
   const [map, setMap] = useState();
