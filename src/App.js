@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 import Blackhat from "./Blackhat";
@@ -6,7 +6,6 @@ import Whitehat from "./StackedMap";
 import * as d3 from "d3";
 import sviData from "./svi_data.json";
 import Charts from "./Charts";
-import { Header } from "./Header";
 
 function App() {
   //state deciding if we are looking at the blackhat or whitehat visualization
@@ -15,9 +14,6 @@ function App() {
   //state for the data, since it loads asynchronously
   const [map, setMap] = useState();
   const [usMap, setUSMap] = useState();
-
-  //filter for the linked view in whitehat stats
-  const [sortKey, setSortKey] = useState("age");
 
   //load map contours
   //react looks into the '/public' folder by default

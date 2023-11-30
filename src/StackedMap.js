@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as d3 from "d3";
 import * as topojson from "topojson";
 import useSVGCanvas from "./useSVGCanvas";
@@ -42,11 +42,14 @@ function WhiteHat(props) {
   };
 
   // Function to convert day number to date string
-  const formatDate = (dayNum) => {
-    const date = new Date(startDate.getTime());
-    date.setDate(date.getDate() + dayNum);
-    return date.toISOString().split("T")[0];
-  };
+  const formatDate = useCallback(
+    (dayNum) => {
+      const date = new Date(startDate.getTime());
+      date.setDate(date.getDate() + dayNum);
+      return date.toISOString().split("T")[0];
+    },
+    [startDate]
+  );
 
   // Function to fetch JSON data
   const fetchJson = async (formattedDate) => {
@@ -154,19 +157,19 @@ function WhiteHat(props) {
         .attr("font-weight", "bold")
         .attr("font-size", "14px");
 
-      function updateLegend(newDataType) {
-        // Update scales
-        const minMaxValue = d3.extent(props.data, (d) => d[newDataType]);
-        colorScale.domain(minMaxValue);
-        legendScale.domain(minMaxValue);
+      // function updateLegend(newDataType) {
+      //   // Update scales
+      //   const minMaxValue = d3.extent(props.data, (d) => d[newDataType]);
+      //   colorScale.domain(minMaxValue);
+      //   legendScale.domain(minMaxValue);
 
-        // Update legend axis
-        svg
-          .select(".legend-axis")
-          .transition()
-          .duration(500) // Transition for smooth updating
-          .call(d3.axisBottom(legendScale));
-      }
+      //   // Update legend axis
+      //   svg
+      //     .select(".legend-axis")
+      //     .transition()
+      //     .duration(500) // Transition for smooth updating
+      //     .call(d3.axisBottom(legendScale));
+      // }
 
       // Set up projection and path
       const projection = d3
@@ -182,10 +185,10 @@ function WhiteHat(props) {
       try {
         const usMap = props.map;
         const counties = topojson.feature(usMap, usMap.objects.counties);
-        const mapGroup = svg
-          .append("g")
-          .attr("class", "map-group")
-          .attr("transform", "translate(100, 50)");
+        // const mapGroup = svg
+        //   .append("g")
+        //   .attr("class", "map-group")
+        //   .attr("transform", "translate(100, 50)");
         const countyPaths = svg.selectAll(".county").data(counties.features);
 
         // Enter selection
@@ -209,8 +212,8 @@ function WhiteHat(props) {
             .domain([0, d3.max(covidData, (d) => d[selectedDataType2])]) // Assuming 'new_cases' is what you want to visualize
             .range([0, 40]); // Adjust the range based on your desired bubble sizes
 
-          const minDosePct = d3.min(covidData, (d) => d[selectedDataType3]);
-          const maxDosePct = d3.max(covidData, (d) => d[selectedDataType3]);
+          // const minDosePct = d3.min(covidData, (d) => d[selectedDataType3]);
+          // const maxDosePct = d3.max(covidData, (d) => d[selectedDataType3]);
 
           const colorScale2 = d3
             .scaleQuantize()
@@ -395,6 +398,10 @@ function WhiteHat(props) {
     dayNumber,
     height,
     width,
+    covidData,
+    formatDate,
+    props.map,
+    props.data,
     selectedDataType,
     selectedDataType2,
     selectedDataType3,

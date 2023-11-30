@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import * as d3 from "d3";
 
 export default function useSVGCanvas(d3Container) {
@@ -42,7 +42,7 @@ export default function useSVGCanvas(d3Container) {
         //setTTip(tip);
       }
     },
-    [d3Container.current, windowWidth, windowHeight]
+    [d3Container, windowWidth, windowHeight]
   );
 
   return [svg, height, width];

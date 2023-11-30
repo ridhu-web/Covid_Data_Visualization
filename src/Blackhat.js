@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import * as topojson from "topojson";
 import stateMap from "./stateMap";
-import useSVGCanvas from "./useSVGCanvas";
 import "./StackedMap.css";
 import "./Blackhat.css";
 
@@ -10,9 +9,6 @@ function BlackHat(props) {
   const d3Container = useRef(null);
 
   const [jsonData, setJsonData] = useState(null);
-  const [dataByState, setDataByState] = useState(null);
-
-  const [updatedMap, setUpdatedMap] = useState(null);
 
   const startDate = new Date("2020-01-21");
   const endDate = new Date("2023-03-23");
@@ -59,7 +55,7 @@ function BlackHat(props) {
     d3.select(d3Container.current).selectAll("svg").remove();
 
     const height = 625;
-    const counties = topojson.feature(us, us.objects.counties);
+    //const counties = topojson.feature(us, us.objects.counties);
 
     //console.log("counties", counties);
 
@@ -89,19 +85,19 @@ function BlackHat(props) {
 
     const nation = topojson.mesh(us, us.objects.nation);
 
-    const parseRow = (row) => {
-      for (let key in row) {
-        if (key === "name") {
-          const [county, state] = row.name.split(", ");
-          row.state = state;
-          row.county = county;
-          delete row.name;
-        } else if (key !== "geoid") {
-          row[key] = Number(row[key]);
-        }
-      }
-      return row;
-    };
+    // const parseRow = (row) => {
+    //   for (let key in row) {
+    //     if (key === "name") {
+    //       const [county, state] = row.name.split(", ");
+    //       row.state = state;
+    //       row.county = county;
+    //       delete row.name;
+    //     } else if (key !== "geoid") {
+    //       row[key] = Number(row[key]);
+    //     }
+    //   }
+    //   return row;
+    // };
 
     //const jsonData = loadJsonData("data_2021-01-23.json");
 
@@ -111,7 +107,7 @@ function BlackHat(props) {
 
     //console.log("jdataByState", jdataByState);
     const width = 960;
-    const STATE_CIRCLE_RADIUS = 30;
+    //const STATE_CIRCLE_RADIUS = 30;
     const NODE = { MIN_RADIUS: 0, MAX_RADIUS: 15, PADDING: 1 };
     const packSiblings = (values) => d3.packSiblings(values);
     const packEnclose = (values) => d3.packEnclose(values);
