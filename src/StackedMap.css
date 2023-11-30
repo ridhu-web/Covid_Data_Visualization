@@ -1,5 +1,5 @@
 
-.vis-btns {
+.vis-btns, .date-btns {
     padding: 5px 5px;
     font-size: 16px;
     cursor: pointer;
@@ -11,7 +11,7 @@
     transition: background-color 0.3s ease;
   }
   
-  .vis-btns:hover {
+  .vis-btns:hover, .date-btns:hover {
     background-color: #2980b9;
   }
 
@@ -21,7 +21,7 @@
 }
   .left-nav {
     height: 100%;
-    width: 20%; /* Width of the navigation bar */
+    width: 28%; /* Width of the navigation bar */
     z-index: 1;
     top: 0;
     left: 0;
@@ -87,3 +87,19 @@
   color: white; /* White text */
   /* Add any other styling you prefer for a selected button */
 }
+
+.button-group {
+  margin-bottom: 1px;
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.button-row button {
+  margin: 5px;
+}
+
+

@@ -14,7 +14,6 @@ function BlackHat(props) {
   const endDate = new Date("2023-03-23");
   const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
 
-  const [dayNumber, setDayNumber] = useState(0);
   const [selectedState, setSelectedState] = useState(null);
 
   const [selectedDataType, setSelectedDataType] = useState("new_deaths");
@@ -24,11 +23,10 @@ function BlackHat(props) {
   const handlePlotTypeChange = (type) => {
     setPlotType(type);
   };
-  const formatDate = (dayNum) => {
-    const date = new Date(startDate.getTime());
-    date.setDate(date.getDate() + dayNum);
-    return date.toISOString().split("T")[0];
-  };
+
+  const [selectedDate, setSelectedDate] = useState(
+    startDate.toISOString().split("T")[0]
+  );
 
   const us = props.map;
 
@@ -43,16 +41,37 @@ function BlackHat(props) {
     }
   }
 
-  useEffect(() => {
-    const formattedDate = formatDate(dayNumber);
-    const dataUrl = `/data2/data_${formattedDate}.json`;
-    loadJsonData(dataUrl);
-  }, [dayNumber]);
-
-  const handleSliderChange = (event) => {
-    const newDay = parseInt(event.target.value, 10);
-    setDayNumber(newDay);
+  const handleDateChange = (e) => {
+    const newDate = e.target.value;
+    setSelectedDate(newDate);
+    console.log("newDate", newDate);
+    // Convert the date to dayNumber or any other format as required by your application
+    // Update the necessary state and data based on the new date
   };
+
+  // Function to add/subtract days, months, years
+  const adjustDate = (amount, unit) => {
+    const currentDate = new Date(selectedDate);
+    if (unit === "day") {
+      currentDate.setDate(currentDate.getDate() + amount);
+    } else if (unit === "month") {
+      currentDate.setMonth(currentDate.getMonth() + amount);
+    } else if (unit === "year") {
+      currentDate.setFullYear(currentDate.getFullYear() + amount);
+    }
+
+    if (currentDate >= startDate && currentDate <= endDate) {
+      setSelectedDate(currentDate.toISOString().split("T")[0]);
+    } else {
+      alert("Selected date is out of range.");
+    }
+  };
+
+  useEffect(() => {
+    // const formattedDate = formatDate(dayNumber);
+    const dataUrl = `/data2/data_${selectedDate}.json`;
+    loadJsonData(dataUrl);
+  }, [selectedDate]);
 
   useEffect(() => {
     if (!us || !jsonData || !d3Container.current) {
@@ -361,7 +380,7 @@ function BlackHat(props) {
           {selectedState && <h2> State: {selectedState}</h2>}
         </div>
 
-        <h4> Datas :</h4>
+        <h4> Kind of Data </h4>
         <button
           className={`vis-btns ${plotType === "density" ? "selected-btn" : ""}`}
           onClick={() => handlePlotTypeChange("density")}
@@ -374,7 +393,7 @@ function BlackHat(props) {
         >
           Plot Values
         </button>
-
+        <h4> Covid Attribute to Analyze</h4>
         <button
           className={`vis-btns ${
             selectedDataType === "cumulative_cases" ? "selected-btn" : ""
@@ -413,14 +432,35 @@ function BlackHat(props) {
         </button>
 
         <div style={{ color: "white", fontWeight: "bold" }}>
-          Data for date: {formatDate(dayNumber)}
+          Data for date:
           <input
-            type="range"
-            min="0"
-            max={totalDays}
-            value={dayNumber}
-            onChange={handleSliderChange}
+            type="date"
+            value={selectedDate}
+            onChange={handleDateChange}
+            min={startDate.toISOString().split("T")[0]}
+            max={endDate.toISOString().split("T")[0]}
           />
+        </div>
+
+        <div>
+          <button className="date-btns" onClick={() => adjustDate(-1, "day")}>
+            Previous Day
+          </button>
+          <button className="date-btns" onClick={() => adjustDate(1, "day")}>
+            Next Day
+          </button>
+          <button className="date-btns" onClick={() => adjustDate(-1, "month")}>
+            Previous Month
+          </button>
+          <button className="date-btns" onClick={() => adjustDate(1, "month")}>
+            Next Month
+          </button>
+          <button className="date-btns" onClick={() => adjustDate(-1, "year")}>
+            Previous Year
+          </button>
+          <button className="date-btns" onClick={() => adjustDate(1, "year")}>
+            Next Year
+          </button>
         </div>
 
         <div style={{ color: "red", fontWeight: "bold", fontSize: 20 }}>

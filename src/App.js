@@ -6,6 +6,7 @@ import Whitehat from "./StackedMap";
 import * as d3 from "d3";
 import sviData from "./svi_data.json";
 import Charts from "./Charts";
+import Charts2 from "./Charts2";
 
 function App() {
   //state deciding if we are looking at the blackhat or whitehat visualization
@@ -74,14 +75,8 @@ function App() {
               Stacked Choropleth Map for Covid Analysis with Health Factors and
               SVI Data
             </div>
-            <div style={{ fontWeight: "bold", color: "red" }}>
-              The SVI data is populated on the Map. The size of the bubble
-              represents the Covid Data. The color of the bubble represents the
-              Vaccination Data. The Slider is used to change the Date.
-            </div>
             <div style={{ fontWeight: "bold", color: "black" }}>
-              If the map is reloaded, please click on the svi data, covid data,
-              Vaccination data and change the slider to see the map.
+              If the map is reloaded, please click covid data.
             </div>
             {/* <div style={{ fontSize: '0.8em' }}>Choropleth Map to illustrate the following factors</div> */}
 
@@ -127,7 +122,7 @@ function App() {
     } else if (viewToggle === "Obesity Charts") {
       return <Charts />;
     } else if (viewToggle === "Smoking Charts") {
-      return <Charts />;
+      return <Charts2 />;
     } else {
       return makeWhiteHat();
     }

@@ -35,6 +35,24 @@ function WhiteHat(props) {
     // Update the necessary state and data based on the new date
   };
 
+  // Function to add/subtract days, months, years
+  const adjustDate = (amount, unit) => {
+    const currentDate = new Date(selectedDate);
+    if (unit === "day") {
+      currentDate.setDate(currentDate.getDate() + amount);
+    } else if (unit === "month") {
+      currentDate.setMonth(currentDate.getMonth() + amount);
+    } else if (unit === "year") {
+      currentDate.setFullYear(currentDate.getFullYear() + amount);
+    }
+
+    if (currentDate >= startDate && currentDate <= endDate) {
+      setSelectedDate(currentDate.toISOString().split("T")[0]);
+    } else {
+      alert("Selected date is out of range.");
+    }
+  };
+
   // Function to fetch JSON data
   const fetchJson = async (formattedDate) => {
     try {
@@ -102,7 +120,7 @@ function WhiteHat(props) {
       const legend = svg
         .append("g")
         .attr("class", "legend")
-        .attr("transform", "translate(0, 250)"); // Replace x, y with your desired position
+        .attr("transform", "translate(200, 75)"); // Replace x, y with your desired position
 
       // Create a gradient for the legend
       const linearGradient = legend
@@ -239,7 +257,7 @@ function WhiteHat(props) {
           const bubbleLegend = svg
             .append("g")
             .attr("class", "bubble-legend")
-            .attr("transform", "translate(0, 320)"); // Adjust the position as needed
+            .attr("transform", "translate(450, 75)"); // Adjust the position as needed
 
           bubbleLegend
             .append("rect")
@@ -418,152 +436,197 @@ function WhiteHat(props) {
   return (
     <div className={"container"}>
       <div className={"left-nav"}>
-        <div>
-          <h4>SVI Data (Plotted on the map):</h4>
-          <button
-            className={`vis-btns ${
-              selectedDataType === "below_150_percent_poverty"
-                ? "selected-btn"
-                : ""
-            }`}
-            onClick={() => handleDataTypeChange("below_150_percent_poverty")}
-            title="View data related to population who are below poverty level"
-          >
-            Poverty Level
-          </button>
-          <button
-            className={`vis-btns ${
-              selectedDataType === "no_health_insurance" ? "selected-btn" : ""
-            }`}
-            onClick={() => handleDataTypeChange("no_health_insurance")}
-            title="View data related to health insurance"
-          >
-            Health Insurance
-          </button>
-          <button
-            className={`vis-btns ${
-              selectedDataType === "aged_65_and_older" ? "selected-btn" : ""
-            }`}
-            onClick={() => handleDataTypeChange("aged_65_and_older")}
-            title="View data related to population aged 65 and older"
-          >
-            Aged 65 and Older
-          </button>
-          <button
-            className={`vis-btns ${
-              selectedDataType === "single_parent_households"
-                ? "selected-btn"
-                : ""
-            }`}
-            onClick={() => handleDataTypeChange("single_parent_households")}
-            title="View data related to population who are single parents"
-          >
-            Single Parent Households
-          </button>
-          <button
-            className={`vis-btns ${
-              selectedDataType === "hispanic_or_latino" ? "selected-btn" : ""
-            }`}
-            onClick={() => handleDataTypeChange("hispanic_or_latino")}
-            title="View data related to race"
-          >
-            Hispanic or Latino
-          </button>
-          <button
-            className={`vis-btns ${
-              selectedDataType ===
-              "black_and_african_american_not_hispanic_or_latino"
-                ? "selected-btn"
-                : ""
-            }`}
-            onClick={() =>
-              handleDataTypeChange(
-                "black_and_african_american_not_hispanic_or_latino"
-              )
-            }
-            title="View data related to population based on race"
-          >
-            African American
-          </button>
-          <button
-            className={`vis-btns ${
-              selectedDataType === "crowding" ? "selected-btn" : ""
-            }`}
-            onClick={() => handleDataTypeChange("crowding")}
-            title="View data related to crowding"
-          >
-            Crowding
-          </button>
-          <button
-            className={`vis-btns ${
-              selectedDataType === "no_vehicle" ? "selected-btn" : ""
-            }`}
-            onClick={() => handleDataTypeChange("no_vehicle")}
-            title="View data related population who has no vehicles"
-          >
-            No Vehicle
-          </button>
+        <div style={{ color: "white", fontWeight: "bold" }}>
+          Data for date:
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={handleDateChange}
+            min={startDate.toISOString().split("T")[0]}
+            max={endDate.toISOString().split("T")[0]}
+          />
+          <div>
+            <button className="date-btns" onClick={() => adjustDate(-1, "day")}>
+              Previous Day
+            </button>
+            <button className="date-btns" onClick={() => adjustDate(1, "day")}>
+              Next Day
+            </button>
+            <button
+              className="date-btns"
+              onClick={() => adjustDate(-1, "month")}
+            >
+              Previous Month
+            </button>
+            <button
+              className="date-btns"
+              onClick={() => adjustDate(1, "month")}
+            >
+              Next Month
+            </button>
+            <button
+              className="date-btns"
+              onClick={() => adjustDate(-1, "year")}
+            >
+              Previous Year
+            </button>
+            <button className="date-btns" onClick={() => adjustDate(1, "year")}>
+              Next Year
+            </button>
+          </div>
         </div>
-        <div>
-          <h4>COVID-19 Data (Size of the bubble)</h4>
-          <button
-            className={`vis-btns ${
-              selectedDataType2 === "new_cases" ? "selected-btn" : ""
-            }`}
-            onClick={() => handleDataTypeChange2("new_cases")}
-            title="View data related to new covid cases"
-          >
-            New Cases
-          </button>
-          <button
-            className={`vis-btns ${
-              selectedDataType2 === "new_deaths" ? "selected-btn" : ""
-            }`}
-            onClick={() => handleDataTypeChange2("new_deaths")}
-            title="View data related to new covid deaths"
-          >
-            New Deaths
-          </button>
-          <button
-            className={`vis-btns ${
-              selectedDataType2 === "cumulative_cases" ? "selected-btn" : ""
-            }`}
-            onClick={() => handleDataTypeChange2("cumulative_cases")}
-            title="View data related to cumulative covid 19 cases"
-          >
-            Cumulative Cases
-          </button>
-          <button
-            className={`vis-btns ${
-              selectedDataType2 === "cumulative_deaths" ? "selected-btn" : ""
-            }`}
-            onClick={() => handleDataTypeChange2("cumulative_deaths")}
-            title="View data related cumulative covid 19 deaths"
-          >
-            Cumulative Deaths
-          </button>
+        <div className="button-group">
+          <h4>SVI Data (Plotted on the map):</h4>
+          <div className="button-row">
+            <button
+              className={`vis-btns ${
+                selectedDataType === "below_150_percent_poverty"
+                  ? "selected-btn"
+                  : ""
+              }`}
+              onClick={() => handleDataTypeChange("below_150_percent_poverty")}
+              title="View data related to population who are below poverty level"
+            >
+              Poverty Level
+            </button>
+            <button
+              className={`vis-btns ${
+                selectedDataType === "no_health_insurance" ? "selected-btn" : ""
+              }`}
+              onClick={() => handleDataTypeChange("no_health_insurance")}
+              title="View data related to health insurance"
+            >
+              Health Insurance
+            </button>
+            <button
+              className={`vis-btns ${
+                selectedDataType === "aged_65_and_older" ? "selected-btn" : ""
+              }`}
+              onClick={() => handleDataTypeChange("aged_65_and_older")}
+              title="View data related to population aged 65 and older"
+            >
+              Aged 65 and Older
+            </button>
+            <button
+              className={`vis-btns ${
+                selectedDataType === "single_parent_households"
+                  ? "selected-btn"
+                  : ""
+              }`}
+              onClick={() => handleDataTypeChange("single_parent_households")}
+              title="View data related to population who are single parents"
+            >
+              Single Parent Households
+            </button>
+            <button
+              className={`vis-btns ${
+                selectedDataType === "hispanic_or_latino" ? "selected-btn" : ""
+              }`}
+              onClick={() => handleDataTypeChange("hispanic_or_latino")}
+              title="View data related to race"
+            >
+              Hispanic or Latino
+            </button>
+            <button
+              className={`vis-btns ${
+                selectedDataType ===
+                "black_and_african_american_not_hispanic_or_latino"
+                  ? "selected-btn"
+                  : ""
+              }`}
+              onClick={() =>
+                handleDataTypeChange(
+                  "black_and_african_american_not_hispanic_or_latino"
+                )
+              }
+              title="View data related to population based on race"
+            >
+              African American
+            </button>
+            <button
+              className={`vis-btns ${
+                selectedDataType === "crowding" ? "selected-btn" : ""
+              }`}
+              onClick={() => handleDataTypeChange("crowding")}
+              title="View data related to crowding"
+            >
+              Crowding
+            </button>
+            <button
+              className={`vis-btns ${
+                selectedDataType === "no_vehicle" ? "selected-btn" : ""
+              }`}
+              onClick={() => handleDataTypeChange("no_vehicle")}
+              title="View data related population who has no vehicles"
+            >
+              No Vehicle
+            </button>
+          </div>
+        </div>
+        <div className="button-group">
+          <div className="button-row">
+            <h4>COVID-19 Data (Size of the bubble)</h4>
+            <button
+              className={`vis-btns ${
+                selectedDataType2 === "new_cases" ? "selected-btn" : ""
+              }`}
+              onClick={() => handleDataTypeChange2("new_cases")}
+              title="View data related to new covid cases"
+            >
+              New Cases
+            </button>
+            <button
+              className={`vis-btns ${
+                selectedDataType2 === "new_deaths" ? "selected-btn" : ""
+              }`}
+              onClick={() => handleDataTypeChange2("new_deaths")}
+              title="View data related to new covid deaths"
+            >
+              New Deaths
+            </button>
+            <button
+              className={`vis-btns ${
+                selectedDataType2 === "cumulative_cases" ? "selected-btn" : ""
+              }`}
+              onClick={() => handleDataTypeChange2("cumulative_cases")}
+              title="View data related to cumulative covid 19 cases"
+            >
+              Cumulative Cases
+            </button>
+            <button
+              className={`vis-btns ${
+                selectedDataType2 === "cumulative_deaths" ? "selected-btn" : ""
+              }`}
+              onClick={() => handleDataTypeChange2("cumulative_deaths")}
+              title="View data related cumulative covid 19 deaths"
+            >
+              Cumulative Deaths
+            </button>
+          </div>
         </div>
 
-        <div>
-          <h4>Vaccination Data (Color of the Bubble)</h4>
-          <button
-            className={`vis-btns ${
-              selectedDataType3 === "dose1_pct" ? "selected-btn" : ""
-            }`}
-            onClick={() => handleDataTypeChange3("dose1_pct")}
-            title="View data related population who completed covid 19 dose 1 vaccine"
-          >
-            Dose 1 Completion %
-          </button>
-          <button
-            className={`vis-btns ${
-              selectedDataType3 === "dose2_pct" ? "selected-btn" : ""
-            }`}
-            onClick={() => handleDataTypeChange3("dose2_pct")}
-            title="View data related population who completed covid 19 dose 2 vaccine"
-          >
-            Dose 2 Completion %
-          </button>
+        <div className="button-group">
+          <div className="button-row">
+            <h4>Vaccination Data (Color of the Bubble)</h4>
+            <button
+              className={`vis-btns ${
+                selectedDataType3 === "dose1_pct" ? "selected-btn" : ""
+              }`}
+              onClick={() => handleDataTypeChange3("dose1_pct")}
+              title="View data related population who completed covid 19 dose 1 vaccine"
+            >
+              Dose 1%
+            </button>
+            <button
+              className={`vis-btns ${
+                selectedDataType3 === "dose2_pct" ? "selected-btn" : ""
+              }`}
+              onClick={() => handleDataTypeChange3("dose2_pct")}
+              title="View data related population who completed covid 19 dose 2 vaccine"
+            >
+              Dose 2%
+            </button>
+          </div>
         </div>
 
         {/* <div style={{ color: "white", fontWeight: "bold" }}>
@@ -576,17 +639,6 @@ function WhiteHat(props) {
             onChange={handleSliderChange}
           />
         </div> */}
-
-        <div style={{ color: "white", fontWeight: "bold" }}>
-          Data for date:
-          <input
-            type="date"
-            value={selectedDate}
-            onChange={handleDateChange}
-            min={startDate.toISOString().split("T")[0]}
-            max={endDate.toISOString().split("T")[0]}
-          />
-        </div>
       </div>
       <div
         className={"d3-component"}
