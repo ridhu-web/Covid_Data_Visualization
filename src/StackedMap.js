@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import * as topojson from "topojson";
 import useSVGCanvas from "./useSVGCanvas";
 import "./StackedMap.css";
+import initialData from "./data_2020-03-21.json";
 
 function WhiteHat(props) {
   const d3Container = useRef(null);
@@ -17,15 +18,10 @@ function WhiteHat(props) {
   const [selectedDataType2, setSelectedDataType2] = useState("new_cases");
   const [selectedDataType3, setSelectedDataType3] = useState("dose1_pct");
 
-  const startDate = new Date("2020-01-21");
+  const startDate = new Date("2020-03-21");
   const endDate = new Date("2023-03-23");
-  const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
 
-  const [dayNumber, setDayNumber] = useState(0);
-  const [covidData, setCovidData] = useState(null);
-
-  const [sliderValue, setSliderValue] = useState(0); // Temporary state to hold the slider value
-  const sliderTimeout = useRef(null); // Ref to store the current timeout
+  const [covidData, setCovidData] = useState(initialData);
 
   const [selectedDate, setSelectedDate] = useState(
     startDate.toISOString().split("T")[0]
@@ -34,32 +30,10 @@ function WhiteHat(props) {
   const handleDateChange = (e) => {
     const newDate = e.target.value;
     setSelectedDate(newDate);
+    console.log("newDate", newDate);
     // Convert the date to dayNumber or any other format as required by your application
     // Update the necessary state and data based on the new date
   };
-
-  const handleSliderChange = (e) => {
-    const newValue = parseInt(e.target.value, 10);
-    setSliderValue(newValue); // Update the temporary slider value
-
-    // Clear the existing timeout
-    if (sliderTimeout.current) {
-      clearTimeout(sliderTimeout.current);
-    }
-
-    // Set a new timeout
-    sliderTimeout.current = setTimeout(() => {
-      setDayNumber(newValue);
-      //console.log("newValue", newValue);
-    }, 50); // 2 seconds delay
-  };
-
-  // Function to convert day number to date string
-  const formatDate = useCallback((dayNum) => {
-    const date = new Date(startDate.getTime());
-    date.setDate(date.getDate() + dayNum);
-    return date.toISOString().split("T")[0];
-  }, []);
 
   // Function to fetch JSON data
   const fetchJson = async (formattedDate) => {
@@ -188,8 +162,9 @@ function WhiteHat(props) {
         .translate([width / 2, height / 2]);
       const path = d3.geoPath().projection(projection);
 
-      const formattedDate = formatDate(dayNumber);
-      fetchJson(formattedDate);
+      //const formattedDate = formatDate(dayNumber);
+      //console.log("formattedDate", formattedDate);
+      fetchJson(selectedDate);
 
       // const formattedDate = formatDate(selectedDate); // Assuming formatDate can handle the conversion
       // fetchJson(formattedDate);
@@ -422,7 +397,6 @@ function WhiteHat(props) {
     }
   }, [
     //svg,
-    dayNumber,
     covidData,
     selectedDataType,
     selectedDataType2,
@@ -592,7 +566,7 @@ function WhiteHat(props) {
           </button>
         </div>
 
-        <div style={{ color: "white", fontWeight: "bold" }}>
+        {/* <div style={{ color: "white", fontWeight: "bold" }}>
           Data for date: {formatDate(dayNumber)}
           <input
             type="range"
@@ -601,7 +575,7 @@ function WhiteHat(props) {
             value={sliderValue} // Use the temporary slider value here
             onChange={handleSliderChange}
           />
-        </div>
+        </div> */}
 
         <div style={{ color: "white", fontWeight: "bold" }}>
           Data for date:

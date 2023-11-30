@@ -18,6 +18,12 @@ function BlackHat(props) {
   const [selectedState, setSelectedState] = useState(null);
 
   const [selectedDataType, setSelectedDataType] = useState("new_deaths");
+
+  const [plotType, setPlotType] = useState("density"); // Default to 'density'
+
+  const handlePlotTypeChange = (type) => {
+    setPlotType(type);
+  };
   const formatDate = (dayNum) => {
     const date = new Date(startDate.getTime());
     date.setDate(date.getDate() + dayNum);
@@ -109,28 +115,42 @@ function BlackHat(props) {
     //console.log("jdataByState", jdataByState);
     const width = 960;
     //const STATE_CIRCLE_RADIUS = 30;
-    const NODE = { MIN_RADIUS: 0, MAX_RADIUS: 10, PADDING: 1 };
+    const NODE = { MIN_RADIUS: 3, MAX_RADIUS: 10, PADDING: 1 };
     const packSiblings = (values) => d3.packSiblings(values);
     const packEnclose = (values) => d3.packEnclose(values);
     const scheme = d3.schemeGnBu;
 
+    // const perPopulation = (d) => {
+    //   if (!d.population || d.population === 0 || plotType === "value") {
+    //     return d[selectedDataType];
+    //   }
+    //   return (d[selectedDataType] / d.population) * 100000; // Density calculation
+    // };
+
     const perPopulation = (d) => {
       if (!d.population || d.population === 0) {
         return 0;
+      } else if (plotType === "value") {
+        return d[selectedDataType];
       }
       return (d[selectedDataType] / d.population) * 100000;
     };
 
+    // const color = d3
+    //   .scaleQuantize()
+    //   .domain(
+    //     d3.extent(jsonData, (d) => {
+    //       //console.log("population", perPopulation(d));
+    //       //return d[selectedDataType];
+    //       return perPopulation(d);
+    //     })
+    //   )
+    //   .range(scheme[8]);
+
     const color = d3
-      .scaleQuantize()
-      .domain(
-        d3.extent(jsonData, (d) => {
-          //console.log("population", perPopulation(d));
-          //return d[selectedDataType];
-          return perPopulation(d);
-        })
-      )
-      .range(scheme[8]);
+      .scaleSequential()
+      .interpolator(d3.interpolateBlues)
+      .domain(d3.extent(jsonData, (d) => perPopulation(d)));
 
     const radius = d3
       .scaleSqrt()
@@ -155,7 +175,7 @@ function BlackHat(props) {
         .append("rect")
         .attr("width", 960)
         .attr("height", height)
-        .attr("fill", "white");
+        .attr("fill", "#333333");
 
       svg
         .append("path")
@@ -258,6 +278,7 @@ function BlackHat(props) {
       //console.log("statesPacked", statesPacked);
       let values = [...new Map(statesPacked).values()];
       values = applySimulation(values);
+      const ZOOM_SCALE_FACTOR = 1.5;
 
       svg.select(".state-boundaries").attr("stroke", "#fff");
 
@@ -270,8 +291,18 @@ function BlackHat(props) {
         .append("g")
         .classed("state-pack", true)
         .attr("transform", (d) => `translate(${d.x}, ${d.y})`)
+        // .on("click", (event, d) => {
+        //   setSelectedState(d.name); // Assuming 'name' is the property for state name
+        // });
+
         .on("click", (event, d) => {
-          setSelectedState(d.name); // Assuming 'name' is the property for state name
+          if (selectedState === d.name) {
+            // If the state is already selected, deselect it
+            setSelectedState(null);
+          } else {
+            // Otherwise, select the new state
+            setSelectedState(d.name);
+          }
         });
 
       console.log("statePacks", statePacks);
@@ -284,8 +315,10 @@ function BlackHat(props) {
 
       statePacks
         .append("circle")
-        .attr("r", (d) => d.r)
-        .attr("fill", (d) => (selectedState === d.name ? "#000" : "#e2e2e2"))
+        .attr("r", (d) =>
+          selectedState === d.name ? d.r * ZOOM_SCALE_FACTOR : d.r
+        )
+        .attr("fill", (d) => (selectedState === d.name ? "#CCCCCC" : "#FFCC00"))
         .attr("stroke", "#333");
 
       const counties = statePacks
@@ -301,7 +334,7 @@ function BlackHat(props) {
         .attr("fill", (d) => color(perPopulation(d.data)));
 
       counties.append("title").text((d) => {
-        return `${d.data.area_name}, ${d.data.state}\n${selectedDataType}: ${d.data[selectedDataType]}`;
+        return `${d.data.area_name}, ${d.data.state}\n New Cases: ${d.data["new_cases"]}\n New Deaths: ${d.data["new_deaths"]}\n Cumulative Cases: ${d.data["cumulative_cases"]}\n Cumulative Deaths: ${d.data["cumulative_deaths"]} `;
       });
 
       return map;
@@ -315,7 +348,7 @@ function BlackHat(props) {
     return () => {
       d3.select(d3Container.current).select("svg").remove();
     };
-  }, [jsonData, us, selectedDataType, selectedState]);
+  }, [jsonData, us, selectedDataType, selectedState, plotType]);
 
   const handleDataTypeChange = (dataType) => {
     setSelectedDataType(dataType);
@@ -330,13 +363,26 @@ function BlackHat(props) {
 
         <h4> Datas :</h4>
         <button
+          className={`vis-btns ${plotType === "density" ? "selected-btn" : ""}`}
+          onClick={() => handlePlotTypeChange("density")}
+        >
+          Plot Density (per 100K)
+        </button>
+        <button
+          className={`vis-btns ${plotType === "value" ? "selected-btn" : ""}`}
+          onClick={() => handlePlotTypeChange("value")}
+        >
+          Plot Values
+        </button>
+
+        <button
           className={`vis-btns ${
             selectedDataType === "cumulative_cases" ? "selected-btn" : ""
           }`}
           onClick={() => handleDataTypeChange("cumulative_cases")}
           title="cumulative_cases"
         >
-          Cumulative Cases per 100K
+          Cumulative Cases
         </button>
         <button
           className={`vis-btns ${
@@ -345,7 +391,7 @@ function BlackHat(props) {
           onClick={() => handleDataTypeChange("cumulative_deaths")}
           title="cumulative_deaths"
         >
-          Cumulative Deaths per 100K
+          Cumulative Deaths
         </button>
         <button
           className={`vis-btns ${
@@ -354,7 +400,7 @@ function BlackHat(props) {
           onClick={() => handleDataTypeChange("new_cases")}
           title="new_cases"
         >
-          New Cases per 100K
+          New Cases
         </button>
         <button
           className={`vis-btns ${
@@ -363,7 +409,7 @@ function BlackHat(props) {
           onClick={() => handleDataTypeChange("new_deaths")}
           title="new_deaths"
         >
-          New deaths per 100K
+          New deaths
         </button>
 
         <div style={{ color: "white", fontWeight: "bold" }}>
