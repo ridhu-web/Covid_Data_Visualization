@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import VegaChart1 from "./VegaChart1";
 
 function Charts() {
   // Styling for the boxes
@@ -12,20 +13,8 @@ function Charts() {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-      {/* Row 1 */}
-      <div style={{ display: "flex", flex: 1, height: "50%" }}>
-        <div style={boxStyle}>Chart 1</div>
-        <div style={boxStyle}>Chart 2</div>
-        <div style={boxStyle}>Chart 3</div>
-      </div>
-
-      {/* Row 2 */}
-      <div style={{ display: "flex", flex: 1, height: "50%" }}>
-        <div style={boxStyle}>Chart 4</div>
-        <div style={boxStyle}>Chart 5</div>
-        <div style={boxStyle}>Chart 6</div>
-      </div>
+    <div>
+      <VegaChart1 />
     </div>
   );
 }

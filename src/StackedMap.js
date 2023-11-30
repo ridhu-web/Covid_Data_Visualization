@@ -7,8 +7,10 @@ import "./StackedMap.css";
 function WhiteHat(props) {
   const d3Container = useRef(null);
   const [svg, height, width] = useSVGCanvas(d3Container);
-  console.log("height", height);
-  console.log("width", width);
+  //console.log("height", height);
+
+  //console.log("width", width);
+
   const [selectedDataType, setSelectedDataType] = useState(
     "below_150_percent_poverty"
   );
@@ -25,6 +27,17 @@ function WhiteHat(props) {
   const [sliderValue, setSliderValue] = useState(0); // Temporary state to hold the slider value
   const sliderTimeout = useRef(null); // Ref to store the current timeout
 
+  const [selectedDate, setSelectedDate] = useState(
+    startDate.toISOString().split("T")[0]
+  );
+
+  const handleDateChange = (e) => {
+    const newDate = e.target.value;
+    setSelectedDate(newDate);
+    // Convert the date to dayNumber or any other format as required by your application
+    // Update the necessary state and data based on the new date
+  };
+
   const handleSliderChange = (e) => {
     const newValue = parseInt(e.target.value, 10);
     setSliderValue(newValue); // Update the temporary slider value
@@ -37,19 +50,16 @@ function WhiteHat(props) {
     // Set a new timeout
     sliderTimeout.current = setTimeout(() => {
       setDayNumber(newValue);
-      console.log("newValue", newValue);
+      //console.log("newValue", newValue);
     }, 50); // 2 seconds delay
   };
 
   // Function to convert day number to date string
-  const formatDate = useCallback(
-    (dayNum) => {
-      const date = new Date(startDate.getTime());
-      date.setDate(date.getDate() + dayNum);
-      return date.toISOString().split("T")[0];
-    },
-    [startDate]
-  );
+  const formatDate = useCallback((dayNum) => {
+    const date = new Date(startDate.getTime());
+    date.setDate(date.getDate() + dayNum);
+    return date.toISOString().split("T")[0];
+  }, []);
 
   // Function to fetch JSON data
   const fetchJson = async (formattedDate) => {
@@ -181,15 +191,32 @@ function WhiteHat(props) {
       const formattedDate = formatDate(dayNumber);
       fetchJson(formattedDate);
 
+      // const formattedDate = formatDate(selectedDate); // Assuming formatDate can handle the conversion
+      // fetchJson(formattedDate);
+
       // Draw the map
       try {
         const usMap = props.map;
+        const states = topojson.feature(usMap, usMap.objects.states);
+        //console.log("states", states);
         const counties = topojson.feature(usMap, usMap.objects.counties);
         // const mapGroup = svg
         //   .append("g")
         //   .attr("class", "map-group")
         //   .attr("transform", "translate(100, 50)");
         const countyPaths = svg.selectAll(".county").data(counties.features);
+        // Draw state boundaries
+        svg
+          .selectAll(".state")
+          .data(states.features)
+          .enter()
+          .append("path")
+          .attr("class", "state")
+          .attr("d", path)
+          .style("fill", "none") // No fill color for state boundaries
+          .style("stroke", "#000") // Darker stroke color for better contrast
+          .style("stroke-width", "2px") // Thicker stroke
+          .style("stroke-opacity", "1"); // Slightly transparent
 
         // Enter selection
         countyPaths
@@ -394,14 +421,9 @@ function WhiteHat(props) {
       }
     }
   }, [
-    svg,
+    //svg,
     dayNumber,
-    height,
-    width,
     covidData,
-    formatDate,
-    props.map,
-    props.data,
     selectedDataType,
     selectedDataType2,
     selectedDataType3,
@@ -578,6 +600,17 @@ function WhiteHat(props) {
             max={totalDays}
             value={sliderValue} // Use the temporary slider value here
             onChange={handleSliderChange}
+          />
+        </div>
+
+        <div style={{ color: "white", fontWeight: "bold" }}>
+          Data for date:
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={handleDateChange}
+            min={startDate.toISOString().split("T")[0]}
+            max={endDate.toISOString().split("T")[0]}
           />
         </div>
       </div>

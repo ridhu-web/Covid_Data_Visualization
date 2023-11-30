@@ -15,6 +15,7 @@ function BlackHat(props) {
   const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
 
   const [dayNumber, setDayNumber] = useState(0);
+  const [selectedState, setSelectedState] = useState(null);
 
   const [selectedDataType, setSelectedDataType] = useState("new_deaths");
   const formatDate = (dayNum) => {
@@ -108,7 +109,7 @@ function BlackHat(props) {
     //console.log("jdataByState", jdataByState);
     const width = 960;
     //const STATE_CIRCLE_RADIUS = 30;
-    const NODE = { MIN_RADIUS: 0, MAX_RADIUS: 15, PADDING: 1 };
+    const NODE = { MIN_RADIUS: 0, MAX_RADIUS: 10, PADDING: 1 };
     const packSiblings = (values) => d3.packSiblings(values);
     const packEnclose = (values) => d3.packEnclose(values);
     const scheme = d3.schemeGnBu;
@@ -193,9 +194,10 @@ function BlackHat(props) {
         const state = states.features.find(
           (d) => d.properties.name === stateMap[k]
         ); // step 3
+        const name = stateMap[k];
         // console.log("state", state);
         const { x, y } = state.properties; // step 3
-        statesPacked.set(k, { nodes, r, x, y }); // step 4
+        statesPacked.set(k, { nodes, r, x, y, name }); // step 4
       }
 
       return statesPacked;
@@ -267,12 +269,23 @@ function BlackHat(props) {
         .enter()
         .append("g")
         .classed("state-pack", true)
-        .attr("transform", (d) => `translate(${d.x}, ${d.y})`);
+        .attr("transform", (d) => `translate(${d.x}, ${d.y})`)
+        .on("click", (event, d) => {
+          setSelectedState(d.name); // Assuming 'name' is the property for state name
+        });
+
+      console.log("statePacks", statePacks);
+
+      // statePacks
+      //   .append("circle")
+      //   .attr("r", (d) => d.r)
+      //   .attr("fill", "#e2e2e2")
+      //   .attr("stroke", "#333");
 
       statePacks
         .append("circle")
         .attr("r", (d) => d.r)
-        .attr("fill", "#e2e2e2")
+        .attr("fill", (d) => (selectedState === d.name ? "#000" : "#e2e2e2"))
         .attr("stroke", "#333");
 
       const counties = statePacks
@@ -302,7 +315,7 @@ function BlackHat(props) {
     return () => {
       d3.select(d3Container.current).select("svg").remove();
     };
-  }, [jsonData, us, selectedDataType]);
+  }, [jsonData, us, selectedDataType, selectedState]);
 
   const handleDataTypeChange = (dataType) => {
     setSelectedDataType(dataType);
@@ -311,6 +324,10 @@ function BlackHat(props) {
   return (
     <div className={"container"}>
       <div className={"left-nav"}>
+        <div className="state-name-display" style={{ color: "white" }}>
+          {selectedState && <h2> State: {selectedState}</h2>}
+        </div>
+
         <h4> Datas :</h4>
         <button
           className={`vis-btns ${

@@ -42,7 +42,7 @@ export default function useSVGCanvas(d3Container) {
         //setTTip(tip);
       }
     },
-    [d3Container, windowWidth, windowHeight]
+    [d3Container.current, windowWidth, windowHeight]
   );
 
   return [svg, height, width];

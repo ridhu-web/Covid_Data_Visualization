@@ -124,8 +124,12 @@ function App() {
       return makeWhiteHat();
     } else if (viewToggle === "Grid View") {
       return makeBlackHat();
-    } else {
+    } else if (viewToggle === "Obesity Charts") {
       return <Charts />;
+    } else if (viewToggle === "Smoking Charts") {
+      return <Charts />;
+    } else {
+      return makeWhiteHat();
     }
   };
 
@@ -160,12 +164,20 @@ function App() {
           {"Top 25 Counties"}
         </button>
         <button
-          onClick={() => setViewToggle("Charts")}
+          onClick={() => setViewToggle("Smoking Charts")}
           className={
-            viewToggle === "Charts" ? "inactiveButton" : "activeButton"
+            viewToggle === "Smoking Charts" ? "inactiveButton" : "activeButton"
           }
         >
-          {"Charts"}
+          {"Smoking Linked Charts"}
+        </button>
+        <button
+          onClick={() => setViewToggle("Obesity Charts")}
+          className={
+            viewToggle === "Obesity Charts" ? "inactiveButton" : "activeButton"
+          }
+        >
+          {"Obesity Linked Charts"}
         </button>
       </div>
       <div
