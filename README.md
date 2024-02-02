@@ -11,7 +11,6 @@ To set up and run the project locally, follow these steps:
 1. **Clone the Repository:** git clone https://github.com/ridhu-web/Covid_Data_Visualization.git
 
 2. **Navigate to the Project Directory:** cd Covid_Data_Visualization
-Replace `<project-name>` with the name of the folder created by the cloning process.
 
 3. **Install Dependencies:** npm install
 
