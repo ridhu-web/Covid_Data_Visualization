@@ -18,6 +18,8 @@ Replace `<project-name>` with the name of the folder created by the cloning proc
 Using NPM, install the project's dependencies.
 
 4. **Run the Application:** npm start
+
+
 This command will launch the application in your default web browser. If it doesn't open automatically, you can manually visit `http://localhost:3000` in your web browser.
 
 Ensure you have Node.js and NPM installed on your system before proceeding with the setup instructions.
