@@ -9,9 +9,18 @@ This project presents an interactive data visualization tool designed to analyze
 To set up and run the project locally, follow these steps:
 
 1. **Clone the Repository:**
-'''
-<p>Replace `<repository-url>` with the actual URL of the GitHub repository.</p>
-'''
+<button onclick="copyText('git clone https://github.com/ridhu-web/Covid_Data_Visualization.git')">Click to Copy Clone Command</button>
+
+<script>
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(function() {
+    console.log('Copying to clipboard was successful!');
+  }, function(err) {
+    console.error('Could not copy text: ', err);
+  });
+}
+</script>
+
 2. **Navigate to the Project Directory:**
 Replace `<project-name>` with the name of the folder created by the cloning process.
 
