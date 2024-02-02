@@ -9,8 +9,9 @@ This project presents an interactive data visualization tool designed to analyze
 To set up and run the project locally, follow these steps:
 
 1. **Clone the Repository:**
-Replace `<repository-url>` with the actual URL of the GitHub repository.
-
+'''
+<p>Replace `<repository-url>` with the actual URL of the GitHub repository.</p>
+'''
 2. **Navigate to the Project Directory:**
 Replace `<project-name>` with the name of the folder created by the cloning process.
 
