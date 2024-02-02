@@ -8,26 +8,16 @@ This project presents an interactive data visualization tool designed to analyze
 
 To set up and run the project locally, follow these steps:
 
-1. **Clone the Repository:**
-<button onclick="copyText('git clone https://github.com/ridhu-web/Covid_Data_Visualization.git')">Click to Copy Clone Command</button>
+1. **Clone the Repository:** git clone https://github.com/ridhu-web/Covid_Data_Visualization.git
 
-<script>
-function copyText(text) {
-  navigator.clipboard.writeText(text).then(function() {
-    console.log('Copying to clipboard was successful!');
-  }, function(err) {
-    console.error('Could not copy text: ', err);
-  });
-}
-</script>
-
-2. **Navigate to the Project Directory:**
+2. **Navigate to the Project Directory:** cd Covid_Data_Visualization
 Replace `<project-name>` with the name of the folder created by the cloning process.
 
-3. **Install Dependencies:**
+3. **Install Dependencies:** npm install
+
 Using NPM, install the project's dependencies.
 
-4. **Run the Application:**
+4. **Run the Application:** npm start
 This command will launch the application in your default web browser. If it doesn't open automatically, you can manually visit `http://localhost:3000` in your web browser.
 
 Ensure you have Node.js and NPM installed on your system before proceeding with the setup instructions.
