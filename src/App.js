@@ -114,23 +114,23 @@ function App() {
 
   //toggle which visualization we're looking at based on the "viewToggle" state
   const hat = () => {
-    if (viewToggle === "Stacked Choropleth Map") {
-      //return makeWhiteHat();
-      return makeWhiteHat();
-    } else if (viewToggle === "Grid View") {
-      return makeBlackHat();
-    } else if (viewToggle === "Obesity Charts") {
-      return <Charts />;
-    } else if (viewToggle === "Smoking Charts") {
-      return <Charts2 />;
-    } else {
-      return makeWhiteHat();
-    }
+    // if (viewToggle === "Stacked Choropleth Map") {
+    //   //return makeWhiteHat();
+    //   return makeWhiteHat();
+    // } else if (viewToggle === "Grid View") {
+    return makeBlackHat();
+    // } else if (viewToggle === "Obesity Charts") {
+    //   return <Charts />;
+    // } else if (viewToggle === "Smoking Charts") {
+    //   return <Charts2 />;
+    // } else {
+    //   return makeWhiteHat();
+    // }
   };
 
   return (
     <div className="App">
-      <div
+      {/* <div
         className={"header"}
         style={{
           display: "flex",
@@ -139,8 +139,8 @@ function App() {
           height: "2em",
           width: "100vw",
         }}
-      >
-        <button
+      > 
+      {/* <button
           onClick={() => setViewToggle("Stacked Choropleth Map")}
           className={
             viewToggle === "Stacked Choropleth Map"
@@ -158,29 +158,13 @@ function App() {
         >
           {"Top 25 Counties"}
         </button>
-        <button
-          onClick={() => setViewToggle("Smoking Charts")}
-          className={
-            viewToggle === "Smoking Charts" ? "inactiveButton" : "activeButton"
-          }
-        >
-          {"Smoking Linked Charts"}
-        </button>
-        <button
-          onClick={() => setViewToggle("Obesity Charts")}
-          className={
-            viewToggle === "Obesity Charts" ? "inactiveButton" : "activeButton"
-          }
-        >
-          {"Obesity Linked Charts"}
-        </button>
       </div>
       <div
         className={"body"}
         style={{ height: "calc(100vh - 2.5em)", width: "100vw" }}
-      >
-        {hat()}
-      </div>
+      > */}
+      {hat()}
+      {/* </div> */}
     </div>
   );
 }
